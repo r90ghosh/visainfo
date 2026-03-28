@@ -149,9 +149,7 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
   };
 
   return (
-    <div className="glow-container">
-      <span className="glow"></span>
-    <form className="visa-form glow-content" id="form" onSubmit={handleSubmit}>
+    <form className="visa-form" id="form" onSubmit={handleSubmit}>
       <div className="form-header">
         <h2 className="form-title">
           <svg className="form-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -280,7 +278,6 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
         )}
       </button>
     </form>
-    </div>
   );
 }
 
