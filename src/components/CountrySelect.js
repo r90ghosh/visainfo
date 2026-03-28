@@ -92,6 +92,10 @@ const defaultStyles = {
     ...base,
     color: 'rgba(255, 248, 238, 0.4)',
   }),
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: 9999,
+  }),
 };
 
 function formatOptionLabel({ flag, label }) {
@@ -114,6 +118,7 @@ function CountrySelect({ value, onChange, placeholder, styles }) {
       isSearchable
       isClearable
       styles={styles || defaultStyles}
+      menuPortalTarget={document.body}
     />
   );
 }
