@@ -32,7 +32,6 @@ function Header() {
               <circle cx="46" cy="22" r="1.5" fill="#0f0d0a"/>
               <circle cx="18" cy="40" r="2.5" fill="#d4a853" opacity="0.6"/>
             </svg>
-            <span className="hero-brand-name">visainfo.ai</span>
           </div>
           <div className="hero-nav-pill">
             <span className="hero-nav-pill-dot" />

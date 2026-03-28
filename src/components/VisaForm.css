@@ -1,49 +1,244 @@
-/* Form Container — Glassmorphic card */
-.visa-form {
+/* ===== Glowing Shadow Container ===== */
+
+@property --hue {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --rotate {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --bg-y {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --bg-x {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --glow-translate-y {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --bg-size {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --glow-opacity {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --glow-blur {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --glow-scale {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 2;
+}
+@property --glow-radius {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 2;
+}
+@property --white-shadow {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.glow-container {
+  --card-color: #0f0d0a;
+  --card-radius: 24px;
+  --card-width: 100%;
+  --border-width: 3px;
+  --bg-size: 1;
+  --hue: 30;
+  --hue-speed: 0.3;
+  --rotate: 0;
+  --animation-speed: 6s;
+  --interaction-speed: 0.55s;
+  --glow-scale: 1.5;
+  --scale-factor: 1;
+  --glow-blur: 6;
+  --glow-opacity: 0.8;
+  --glow-radius: 100;
+  --glow-rotate-unit: 1deg;
+
+  width: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  background: rgba(255, 245, 230, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 215, 150, 0.08);
-  border-radius: 24px;
-  padding: 36px;
+  z-index: 2;
+  border-radius: var(--card-radius);
+  animation: formEnter 0.5s ease-out;
+}
+
+.glow-container:before,
+.glow-container:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-radius);
+}
+
+/* Form sits as the glow-content */
+.visa-form.glow-content {
+  position: relative;
+  background: var(--card-color);
+  border-radius: calc(var(--card-radius) - 2px);
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-shadow: 0 0 40px rgba(212, 168, 83, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 36px;
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 1;
-  animation: formEnter 0.5s ease-out;
   overflow: visible;
 }
 
-/* Animated gradient border glow */
-.visa-form::before {
-  content: '';
+.visa-form.glow-content:before {
+  content: "";
+  display: block;
   position: absolute;
-  inset: -1px;
-  border-radius: 25px;
-  padding: 1px;
-  background: conic-gradient(
-    from 0deg,
-    rgba(212, 168, 83, 0.3),
-    rgba(184, 115, 51, 0.2),
-    rgba(232, 200, 122, 0.3),
-    rgba(201, 118, 107, 0.15),
-    rgba(212, 168, 83, 0.3)
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: borderRotate 8s linear infinite;
-  pointer-events: none;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(var(--border-width) / -2);
+  left: calc(var(--border-width) / -2);
+  border-radius: var(--card-radius);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  mix-blend-mode: color-burn;
   z-index: -1;
-  opacity: 0.6;
+  background: hsl(0deg 0% 8%) radial-gradient(
+    30% 30% at calc(var(--bg-x) * 1%) calc(var(--bg-y) * 1%),
+    hsl(36deg 60% 70%) calc(0% * var(--bg-size)),
+    hsl(30deg 65% 55%) calc(20% * var(--bg-size)),
+    hsl(25deg 70% 40%) calc(40% * var(--bg-size)),
+    transparent 100%
+  );
+  animation: glow-hue var(--animation-speed) linear infinite,
+             glow-rotate-bg var(--animation-speed) linear infinite;
+  transition: --bg-size var(--interaction-speed) ease;
 }
 
-@keyframes borderRotate {
-  to {
-    transform: rotate(360deg);
+/* The orbiting glow element */
+.glow {
+  --glow-translate-y: 0;
+  display: block;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  animation: glow-rotate var(--animation-speed) linear infinite;
+  transform: rotateZ(calc(var(--rotate) * var(--glow-rotate-unit)));
+  transform-origin: center;
+  border-radius: calc(var(--glow-radius) * 10vw);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow:after {
+  content: "";
+  display: block;
+  z-index: -2;
+  filter: blur(calc(var(--glow-blur) * 10px));
+  width: 130%;
+  height: 130%;
+  left: -15%;
+  top: -15%;
+  background: hsl(36deg 70% 55%);
+  position: relative;
+  border-radius: calc(var(--glow-radius) * 10vw);
+  animation: glow-hue var(--animation-speed) linear infinite;
+  transform: scaleY(calc(var(--glow-scale) * var(--scale-factor) / 1.1))
+             scaleX(calc(var(--glow-scale) * var(--scale-factor) * 1.2))
+             translateY(calc(var(--glow-translate-y) * 1%));
+  opacity: var(--glow-opacity);
+}
+
+/* Hover interactions */
+.glow-container:hover .visa-form.glow-content {
+  box-shadow: 0 0 calc(var(--white-shadow) * 1vw) calc(var(--white-shadow) * 0.15vw) rgba(212, 168, 83, 0.15);
+  animation: glow-shadow-pulse calc(var(--animation-speed) * 2) linear infinite;
+}
+
+.glow-container:hover .visa-form.glow-content:before {
+  --bg-size: 15;
+  animation-play-state: paused;
+  transition: --bg-size var(--interaction-speed) ease;
+}
+
+.glow-container:hover .glow {
+  --glow-blur: 1.5;
+  --glow-opacity: 0.5;
+  --glow-scale: 2.5;
+  --glow-radius: 0;
+  --rotate: 900;
+  --glow-rotate-unit: 0;
+  --scale-factor: 1.25;
+  animation-play-state: paused;
+}
+
+.glow-container:hover .glow:after {
+  --glow-translate-y: 0;
+  animation-play-state: paused;
+  transition: --glow-translate-y 0s ease, --glow-blur 0.05s ease,
+              --glow-opacity 0.05s ease, --glow-scale 0.05s ease,
+              --glow-radius 0.05s ease;
+}
+
+/* Gold-shifted hue animation (cycles around warm tones only) */
+@keyframes glow-hue {
+  0% { --hue: 25; }
+  25% { --hue: 35; }
+  50% { --hue: 15; }
+  75% { --hue: 40; }
+  100% { --hue: 25; }
+}
+
+@keyframes glow-rotate-bg {
+  0% { --bg-x: 0; --bg-y: 0; }
+  25% { --bg-x: 100; --bg-y: 0; }
+  50% { --bg-x: 100; --bg-y: 100; }
+  75% { --bg-x: 0; --bg-y: 100; }
+  100% { --bg-x: 0; --bg-y: 0; }
+}
+
+@keyframes glow-rotate {
+  from {
+    --rotate: -70;
+    --glow-translate-y: -65;
   }
+  25% { --glow-translate-y: -65; }
+  50% { --glow-translate-y: -65; }
+  60%, 75% { --glow-translate-y: -65; }
+  85% { --glow-translate-y: -65; }
+  to {
+    --rotate: calc(360 - 70);
+    --glow-translate-y: -65;
+  }
+}
+
+@keyframes glow-shadow-pulse {
+  0%, 24%, 46%, 73%, 96% { --white-shadow: 0.3; }
+  12%, 28%, 41%, 63%, 75%, 82%, 98% { --white-shadow: 1.5; }
+  6%, 32%, 57% { --white-shadow: 0.8; }
+  18%, 52%, 88% { --white-shadow: 2; }
 }
 
 @keyframes formEnter {
@@ -138,9 +333,12 @@
     gap: 24px;
   }
 
-  .visa-form {
+  .visa-form.glow-content {
     padding: 24px 20px;
-    border-radius: 20px;
+  }
+
+  .glow-container {
+    --card-radius: 20px;
   }
 }
 
