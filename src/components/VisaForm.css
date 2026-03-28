@@ -1,0 +1,203 @@
+/* Form Container — Glassmorphic card */
+.visa-form {
+  position: relative;
+  background: rgba(255, 245, 230, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 150, 0.08);
+  border-radius: 24px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 0 40px rgba(212, 168, 83, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  animation: formEnter 0.5s ease-out;
+  overflow: visible;
+}
+
+/* Animated gradient border glow */
+.visa-form::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 25px;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(212, 168, 83, 0.3),
+    rgba(184, 115, 51, 0.2),
+    rgba(232, 200, 122, 0.3),
+    rgba(201, 118, 107, 0.15),
+    rgba(212, 168, 83, 0.3)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderRotate 8s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+@keyframes borderRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes formEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section header inside form */
+.form-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 215, 150, 0.06);
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.form-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff8ee;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-title-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-primary);
+}
+
+.form-subtitle {
+  font-size: 0.875rem;
+  color: rgba(255, 248, 238, 0.4);
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 248, 238, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-label-icon {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 248, 238, 0.35);
+}
+
+.form-label-required {
+  background: linear-gradient(135deg, #d4a853, #e8c87a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Two column layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .visa-form {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+}
+
+/* Submit Button */
+.submit-btn {
+  margin-top: 8px;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, #d4a853, #b87333);
+  color: #fff8ee;
+  border: none;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 30px rgba(212, 168, 83, 0.3), 0 4px 16px rgba(184, 115, 51, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 50px rgba(212, 168, 83, 0.45), 0 8px 32px rgba(184, 115, 51, 0.35);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0) scale(1);
+  box-shadow: 0 0 20px rgba(212, 168, 83, 0.3);
+}
+
+.submit-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.submit-btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

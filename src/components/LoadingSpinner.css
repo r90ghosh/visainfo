@@ -1,0 +1,91 @@
+/* Loading State — Glassmorphic */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 56px 32px;
+  background: rgba(255, 245, 230, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 150, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 0 40px rgba(212, 168, 83, 0.08);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Concentric spinner rings */
+.spinner-rings {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+.spinner-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+/* Outer ring — gold */
+.spinner-ring--outer {
+  inset: 0;
+  border-top-color: #d4a853;
+  border-right-color: rgba(212, 168, 83, 0.2);
+  animation: spinRing 1.2s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(212, 168, 83, 0.4));
+}
+
+/* Middle ring — amber, slightly smaller, opposite direction */
+.spinner-ring--middle {
+  inset: 8px;
+  border-top-color: #e8c87a;
+  border-left-color: rgba(232, 200, 122, 0.2);
+  animation: spinRingReverse 1s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(232, 200, 122, 0.4));
+}
+
+/* Inner ring — copper, smallest */
+.spinner-ring--inner {
+  inset: 16px;
+  border-top-color: #b87333;
+  border-right-color: rgba(184, 115, 51, 0.2);
+  animation: spinRing 0.8s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(184, 115, 51, 0.4));
+}
+
+@keyframes spinRing {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinRingReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.loading-text {
+  font-size: 0.925rem;
+  color: rgba(255, 248, 238, 0.7);
+  margin: 0;
+  font-weight: 500;
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+.loading-subtext {
+  font-size: 0.8rem;
+  color: rgba(255, 248, 238, 0.35);
+  margin: 0;
+}
+
+@keyframes textPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

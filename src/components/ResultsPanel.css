@@ -1,0 +1,281 @@
+/* Results Container */
+.results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: resultsEnter 0.5s ease-out;
+}
+
+@keyframes resultsEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section header */
+.results-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.results-header-icon {
+  width: 22px;
+  height: 22px;
+  color: #e8c87a;
+  filter: drop-shadow(0 0 6px rgba(212, 168, 83, 0.4));
+}
+
+.results-header-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff8ee;
+  letter-spacing: -0.3px;
+}
+
+/* Result Cards Grid */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual Result Card — Glassmorphic */
+.result-card {
+  background: rgba(255, 245, 230, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 215, 150, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: cardEnter 0.4s ease-out both;
+  position: relative;
+}
+
+/* Colored left borders per card type — warm palette */
+.result-card:nth-child(1) {
+  border-left: 3px solid rgba(212, 168, 83, 0.6);
+  animation-delay: 0.05s;
+}
+.result-card:nth-child(2) {
+  border-left: 3px solid rgba(240, 168, 48, 0.6);
+  animation-delay: 0.1s;
+}
+.result-card:nth-child(3) {
+  border-left: 3px solid rgba(184, 115, 51, 0.6);
+  animation-delay: 0.15s;
+}
+.result-card:nth-child(4) {
+  border-left: 3px solid rgba(201, 118, 107, 0.6);
+  animation-delay: 0.2s;
+}
+.result-card:nth-child(5) {
+  border-left: 3px solid rgba(232, 200, 122, 0.6);
+  animation-delay: 0.25s;
+}
+.result-card:nth-child(6) {
+  border-left: 3px solid rgba(168, 91, 82, 0.6);
+  animation-delay: 0.3s;
+}
+.result-card:nth-child(7) {
+  border-left: 3px solid rgba(139, 115, 85, 0.6);
+  animation-delay: 0.35s;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 3D hover effect */
+.result-card:hover {
+  background: rgba(255, 245, 230, 0.05);
+  border-color: rgba(255, 215, 150, 0.14);
+  transform: perspective(1000px) rotateY(-2deg) rotateX(2deg) translateZ(10px);
+  box-shadow: 0 0 30px rgba(212, 168, 83, 0.1), 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Full width card variant */
+.result-card--full {
+  grid-column: 1 / -1;
+}
+
+/* Card title */
+.result-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 248, 238, 0.4);
+  margin: 0 0 12px;
+}
+
+.result-card-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+}
+
+/* Card text */
+.result-card-text {
+  font-size: 1rem;
+  color: rgba(255, 248, 238, 0.9);
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Embassy info */
+.embassy-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #fff8ee;
+}
+
+.embassy-address {
+  color: rgba(255, 248, 238, 0.55);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* Badge styles — Glassmorphic (semantic colors kept) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.badge-required {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.15);
+}
+
+.badge-not-required {
+  background: rgba(16, 185, 129, 0.12);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
+}
+
+.badge-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Link button */
+.result-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(212, 168, 83, 0.12);
+  border: 1px solid rgba(212, 168, 83, 0.25);
+  border-radius: var(--radius-full);
+  color: #e8c87a;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.result-link:hover {
+  background: rgba(212, 168, 83, 0.2);
+  border-color: rgba(212, 168, 83, 0.4);
+  color: #f0d078;
+  text-decoration: none;
+  box-shadow: 0 0 20px rgba(212, 168, 83, 0.15);
+}
+
+.result-link-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Cost highlight */
+.result-cost {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff8ee;
+  letter-spacing: -0.3px;
+}
+
+/* Wait time */
+.result-wait {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(255, 248, 238, 0.9);
+}
+
+/* Footer / Disclaimer — Glassmorphic */
+.results-footer {
+  text-align: center;
+  padding: 20px 16px 4px;
+}
+
+.disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: rgba(255, 248, 238, 0.4);
+  margin: 0 0 8px;
+  line-height: 1.5;
+  text-align: left;
+  background: rgba(255, 245, 230, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 215, 150, 0.06);
+}
+
+.disclaimer-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: rgba(255, 248, 238, 0.3);
+}
+
+.embassy-link {
+  font-size: 0.85rem;
+  color: rgba(255, 248, 238, 0.4);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.embassy-link:hover {
+  color: #e8c87a;
+  text-decoration: underline;
+}

@@ -1,0 +1,46 @@
+/* Footer */
+.footer {
+  margin-top: auto;
+  padding: 32px 24px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Glass divider line */
+.footer::before {
+  content: '';
+  display: block;
+  width: 100%;
+  max-width: var(--max-width-content);
+  margin: 0 auto 32px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 215, 150, 0.08),
+    rgba(212, 168, 83, 0.15),
+    rgba(255, 215, 150, 0.08),
+    transparent
+  );
+}
+
+.footer-inner {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-brand {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 248, 238, 0.4);
+}
+
+.footer-text {
+  font-size: 0.78rem;
+  color: rgba(255, 248, 238, 0.25);
+  line-height: 1.5;
+}
