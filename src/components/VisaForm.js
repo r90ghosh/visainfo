@@ -1,19 +1,7 @@
 import Select from 'react-select';
 import CountrySelect from './CountrySelect';
+import { travelReasonOptions, currentVisaOptions } from '../data/formOptions';
 import './VisaForm.css';
-
-const travelReasonOptions = [
-  { value: 'tourism', label: 'Tourism' },
-  { value: 'student', label: 'Student' },
-  { value: 'work_business', label: 'Work/Business' },
-];
-
-const currentVisaOptions = [
-  { value: 'na', label: 'N/A' },
-  { value: 'united_states', label: 'United States' },
-  { value: 'schengen', label: 'Schengen (EU)' },
-  { value: 'united_kingdom', label: 'United Kingdom' },
-];
 
 const selectStyles = {
   control: (base, state) => ({
@@ -148,6 +136,20 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
     }
   };
 
+  const handleResidentChange = (val) => {
+    onChange('residentCountry', val);
+    if (val && !formData.nationalityCountry) {
+      onChange('nationalityCountry', val);
+    }
+  };
+
+  const handleNationalityChange = (val) => {
+    onChange('nationalityCountry', val);
+    if (val && !formData.residentCountry) {
+      onChange('residentCountry', val);
+    }
+  };
+
   return (
     <form className="visa-form" id="form" onSubmit={handleSubmit}>
       <div className="form-header">
@@ -173,7 +175,7 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
           </label>
           <CountrySelect
             value={formData.residentCountry}
-            onChange={(val) => onChange('residentCountry', val)}
+            onChange={handleResidentChange}
             placeholder="Where you live..."
             styles={selectStyles}
           />
@@ -190,7 +192,7 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
           </label>
           <CountrySelect
             value={formData.nationalityCountry}
-            onChange={(val) => onChange('nationalityCountry', val)}
+            onChange={handleNationalityChange}
             placeholder="Your passport country..."
             styles={selectStyles}
           />
@@ -223,16 +225,19 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
             Reason for Travel
             <span className="form-label-required">*</span>
           </label>
-          <Select
-            options={travelReasonOptions}
-            value={formData.travelReason}
-            onChange={(val) => onChange('travelReason', val)}
-            placeholder="Purpose of trip..."
-            isSearchable={false}
-            isClearable
-            styles={selectStyles}
-            menuPortalTarget={document.body}
-          />
+          <div className="segmented-control" role="group" aria-label="Reason for Travel">
+            {travelReasonOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className="segmented-btn"
+                aria-pressed={formData.travelReason?.value === option.value}
+                onClick={() => onChange('travelReason', option)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="form-group">
@@ -263,7 +268,7 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
       >
         {loading ? (
           <>
-            <svg className="submit-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
+            <svg className="submit-btn-icon spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 12a9 9 0 1 1-6.219-8.56" />
             </svg>
             Searching...

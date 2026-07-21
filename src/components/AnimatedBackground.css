@@ -190,3 +190,9 @@
     transform: translate(-60px, -40px) rotate(8deg) scale(1.15);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-bg__orb {
+    animation: none;
+  }
+}

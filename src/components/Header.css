@@ -341,3 +341,14 @@
     padding: 5px 12px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none;
+    opacity: 0;
+  }
+
+  .hero-nav-pill-dot {
+    animation: none;
+  }
+}

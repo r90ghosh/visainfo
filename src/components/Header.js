@@ -53,7 +53,7 @@ function Header() {
 
         {/* Subtitle */}
         <p className="hero-subtitle">
-          powered by one of the most intelligent AI models
+          Checked against passport-index data for 199 passports — enriched with AI details.
         </p>
 
         {/* Description */}

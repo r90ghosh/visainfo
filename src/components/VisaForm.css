@@ -217,8 +217,63 @@
   height: 18px;
 }
 
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Segmented control — Reason for Travel */
+.segmented-control {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 245, 230, 0.06);
+  border: 1px solid rgba(255, 215, 150, 0.12);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.segmented-btn {
+  flex: 1;
+  padding: 10px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  color: rgba(255, 248, 238, 0.6);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.segmented-btn:hover {
+  color: #fff8ee;
+  background: rgba(255, 215, 150, 0.08);
+}
+
+.segmented-btn[aria-pressed='true'] {
+  background: linear-gradient(135deg, #d4a853, #b87333);
+  color: #fff8ee;
+  box-shadow: 0 0 16px rgba(212, 168, 83, 0.3);
+}
+
+.segmented-btn:focus-visible {
+  outline: 2px solid rgba(212, 168, 83, 0.6);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visa-form::before,
+  .visa-form::after {
+    animation: none;
+  }
+
+  .spin-icon {
+    animation: none;
   }
 }

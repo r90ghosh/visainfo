@@ -8,6 +8,45 @@ const waiversDb = require('./visa-waivers.json');
 
 const CACHE_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 
+const RATE_LIMITS = {
+  requirement: 60,
+  details: 20,
+};
+
+function isAllowedOrigin(req) {
+  const raw = req.headers.get('origin') || req.headers.get('referer');
+  if (!raw) return false;
+  let hostname;
+  try {
+    hostname = new URL(raw).hostname;
+  } catch {
+    return false;
+  }
+  if (hostname === 'visainfo.ai' || hostname === 'www.visainfo.ai') return true;
+  if (hostname.endsWith('.netlify.app')) return true;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') return true;
+  return false;
+}
+
+function getClientIp(req, context) {
+  return context?.ip || req.headers.get('x-nf-client-connection-ip') || 'unknown';
+}
+
+async function checkRateLimit(ip, phase, limit) {
+  try {
+    const store = getStore('rate-limits');
+    const hourBucket = new Date().toISOString().slice(0, 13);
+    const key = `${ip}:${phase}:${hourBucket}`;
+    const count = (await store.get(key, { type: 'json' })) || 0;
+    if (count >= limit) return false;
+    await store.setJSON(key, count + 1);
+    return true;
+  } catch {
+    // Blobs unavailable (e.g. local dev) — fail open
+    return true;
+  }
+}
+
 const VISA_LABELS = {
   united_states: 'United States',
   schengen: 'Schengen area',
@@ -286,7 +325,36 @@ function computeVisaRequired(category, geminiData) {
   return category === 'visa_free' ? 'No' : 'Yes';
 }
 
-export default async (req) => {
+function buildStaticFields(resolved) {
+  if (resolved.category === 'visa_free') {
+    return {
+      visaType: `No visa required${resolved.maxStayDays ? ` for stays up to ${resolved.maxStayDays} days` : ''}`,
+      embassyInfo: { name: 'No visa application needed', address: '' },
+      applicationFormUrl: '',
+      applicationCost: 'None',
+      processingTime: 'N/A',
+    };
+  }
+  if (resolved.category === 'no_admission') {
+    return {
+      visaType: 'Entry not permitted — contact the nearest embassy',
+      embassyInfo: { name: "Contact the destination country's embassy in your country of residence", address: '' },
+      applicationFormUrl: '',
+      applicationCost: '',
+      processingTime: 'N/A',
+    };
+  }
+  return null;
+}
+
+export default async (req, context) => {
+  if (!isAllowedOrigin(req)) {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
@@ -300,6 +368,17 @@ export default async (req) => {
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
       status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const phase = body.phase === 'requirement' ? 'requirement' : 'details';
+
+  const ip = getClientIp(req, context);
+  const withinLimit = await checkRateLimit(ip, phase, RATE_LIMITS[phase]);
+  if (!withinLimit) {
+    return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }), {
+      status: 429,
       headers: { 'Content-Type': 'application/json' },
     });
   }
@@ -337,11 +416,37 @@ export default async (req) => {
     currentVisas: heldVisaValues,
   });
 
+  const resolvedDestinationCountryName = destinationCountryName || destinationCountry;
+  const embassyDirectoryUrl = `https://www.embassypages.com/${slugify(resolvedDestinationCountryName)}`;
   const skipAI = resolved.category === 'visa_free' || resolved.category === 'no_admission';
 
+  if (phase === 'requirement') {
+    const complete = skipAI;
+    const visaRequired = resolved.category === 'unknown' ? 'Unknown' : computeVisaRequired(resolved.category, null);
+
+    const response = {
+      visaRequired,
+      requirementCategory: resolved.category,
+      requirementLabel: CATEGORY_LABELS[resolved.category] || resolved.category,
+      requirementDescription: resolved.description,
+      maxStayDays: resolved.maxStayDays ?? null,
+      waiver: resolved.waiver,
+      shortStayNote: resolved.shortStayNote,
+      embassyDirectoryUrl,
+      dataUpdatedAt: visaDb._meta?.generatedAt || null,
+      complete,
+      ...(complete && buildStaticFields(resolved)),
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  // phase === 'details'
   const resolvedResidentCountryName = residentCountryName || residentCountry;
   const resolvedNationalityCountryName = nationalityCountryName || nationalityCountry;
-  const resolvedDestinationCountryName = destinationCountryName || destinationCountry;
 
   let geminiData = null;
   let geminiError = null;
@@ -410,18 +515,8 @@ export default async (req) => {
   let processingTime;
   let additionalNotes;
 
-  if (resolved.category === 'visa_free') {
-    visaType = `No visa required${resolved.maxStayDays ? ` for stays up to ${resolved.maxStayDays} days` : ''}`;
-    embassyInfo = { name: 'No visa application needed', address: '' };
-    applicationFormUrl = '';
-    applicationCost = 'None';
-    processingTime = 'N/A';
-  } else if (resolved.category === 'no_admission') {
-    visaType = 'Entry not permitted — contact the nearest embassy';
-    embassyInfo = { name: "Contact the destination country's embassy in your country of residence", address: '' };
-    applicationFormUrl = '';
-    applicationCost = '';
-    processingTime = 'N/A';
+  if (skipAI) {
+    ({ visaType, embassyInfo, applicationFormUrl, applicationCost, processingTime } = buildStaticFields(resolved));
   } else {
     visaType = geminiData?.visaType || unavailable;
     embassyInfo = geminiData?.embassyInfo || { name: unavailable, address: unavailable };
@@ -437,24 +532,16 @@ export default async (req) => {
   }
 
   const visaRequired = computeVisaRequired(resolved.category, geminiData);
-  const embassyDirectoryUrl = `https://www.embassypages.com/${slugify(resolvedDestinationCountryName)}`;
 
   const response = {
-    visaRequired,
-    requirementCategory: resolved.category,
-    requirementLabel: CATEGORY_LABELS[resolved.category] || resolved.category,
-    requirementDescription: resolved.description,
-    maxStayDays: resolved.maxStayDays ?? null,
-    waiver: resolved.waiver,
-    shortStayNote: resolved.shortStayNote,
     visaType,
     embassyInfo,
-    embassyDirectoryUrl,
     applicationFormUrl,
     applicationCost,
     processingTime,
     ...(additionalNotes && { additionalNotes }),
     ...(geminiError && { aiError: geminiError }),
+    visaRequired,
   };
 
   return new Response(JSON.stringify(response), {

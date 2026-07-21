@@ -53,3 +53,15 @@
   color: rgba(255, 248, 238, 0.25);
   line-height: 1.5;
 }
+
+.footer-link {
+  font-size: 0.78rem;
+  color: rgba(255, 248, 238, 0.35);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #e8c87a;
+  text-decoration: underline;
+}

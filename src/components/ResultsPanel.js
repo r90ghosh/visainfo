@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './ResultsPanel.css';
 
 const BADGE_CLASSES = {
@@ -11,7 +12,15 @@ const BADGE_CLASSES = {
   unknown: 'badge-unknown',
 };
 
-function ResultsPanel({ results }) {
+function formatUpdatedDate(iso) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+function ResultsPanel({ results, detailsLoading, detailsError, onRetryDetails, query, onFeedback }) {
+  const [voted, setVoted] = useState(false);
+
   const {
     requirementCategory,
     requirementLabel,
@@ -26,9 +35,24 @@ function ResultsPanel({ results }) {
     applicationCost,
     processingTime,
     additionalNotes,
+    visaRequired,
+    dataUpdatedAt,
   } = results;
 
   const badgeClass = BADGE_CLASSES[requirementCategory] || 'badge-unknown';
+  const badgeLabel =
+    requirementCategory === 'unknown'
+      ? visaRequired && visaRequired !== 'Unknown'
+        ? visaRequired
+        : 'Check requirements'
+      : requirementLabel;
+  const updatedLabel = dataUpdatedAt ? formatUpdatedDate(dataUpdatedAt) : null;
+
+  const handleFeedback = (verdict) => {
+    if (voted) return;
+    setVoted(true);
+    onFeedback?.(verdict);
+  };
 
   return (
     <div className="results-panel">
@@ -51,7 +75,7 @@ function ResultsPanel({ results }) {
             </svg>
             Visa Requirement
           </h3>
-          <span className={`badge ${badgeClass}`}>{requirementLabel}</span>
+          <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
           {requirementDescription && (
             <p className="result-card-subtext">{requirementDescription}</p>
           )}
@@ -75,7 +99,12 @@ function ResultsPanel({ results }) {
             </svg>
             Embassy Information
           </h3>
-          {embassyInfo ? (
+          {detailsLoading ? (
+            <div className="skeleton-block">
+              <div className="skeleton-line skeleton-line--lg" />
+              <div className="skeleton-line skeleton-line--md" />
+            </div>
+          ) : embassyInfo ? (
             <>
               <p className="result-card-text embassy-name">{embassyInfo.name}</p>
               {embassyInfo.address && (
@@ -102,6 +131,15 @@ function ResultsPanel({ results }) {
           )}
         </div>
 
+        {detailsError && (
+          <div className="result-card result-card--full details-error-card">
+            <p className="details-error-text">{detailsError}</p>
+            <button type="button" className="details-error-retry" onClick={onRetryDetails}>
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Visa Type */}
         <div className="result-card">
           <h3 className="result-card-title">
@@ -111,7 +149,11 @@ function ResultsPanel({ results }) {
             </svg>
             Visa Type
           </h3>
-          <p className="result-card-text">{visaType || 'N/A'}</p>
+          {detailsLoading ? (
+            <div className="skeleton-line skeleton-line--md" />
+          ) : (
+            <p className="result-card-text">{visaType || 'N/A'}</p>
+          )}
         </div>
 
         {/* Application Form */}
@@ -123,7 +165,9 @@ function ResultsPanel({ results }) {
             </svg>
             Application Form
           </h3>
-          {applicationFormUrl && applicationFormUrl.startsWith('http') ? (
+          {detailsLoading ? (
+            <div className="skeleton-line skeleton-line--md" />
+          ) : applicationFormUrl && applicationFormUrl.startsWith('http') ? (
             <a
               href={applicationFormUrl}
               target="_blank"
@@ -151,7 +195,11 @@ function ResultsPanel({ results }) {
             </svg>
             Application Cost
           </h3>
-          <p className="result-cost">{applicationCost || 'Not available'}</p>
+          {detailsLoading ? (
+            <div className="skeleton-line skeleton-line--sm" />
+          ) : (
+            <p className="result-cost">{applicationCost || 'Not available'}</p>
+          )}
         </div>
 
         {/* Typical Processing Time */}
@@ -163,7 +211,11 @@ function ResultsPanel({ results }) {
             </svg>
             Typical Processing Time
           </h3>
-          <p className="result-wait">{processingTime || 'Not available'}</p>
+          {detailsLoading ? (
+            <div className="skeleton-line skeleton-line--sm" />
+          ) : (
+            <p className="result-wait">{processingTime || 'Not available'}</p>
+          )}
         </div>
 
         {additionalNotes && (
@@ -191,8 +243,12 @@ function ResultsPanel({ results }) {
           <span>
             This information is AI-generated and may not reflect current requirements.
             Always verify with official embassy or consulate sources before making travel plans.
+            This tool provides general information, not legal advice.
           </span>
         </div>
+        {updatedLabel && (
+          <p className="data-updated-note">Passport-index data updated {updatedLabel}</p>
+        )}
         <a
           href="https://www.embassypages.com"
           target="_blank"
@@ -201,6 +257,40 @@ function ResultsPanel({ results }) {
         >
           Visit EmbassyPages.com for official embassy directories
         </a>
+
+        {query && (
+          <div className="feedback-widget">
+            {voted ? (
+              <p className="feedback-thanks">Thanks for the feedback!</p>
+            ) : (
+              <div className="feedback-prompt">
+                <span>Was this information accurate?</span>
+                <div className="feedback-buttons">
+                  <button
+                    type="button"
+                    className="feedback-btn"
+                    aria-label="Yes, accurate"
+                    onClick={() => handleFeedback('up')}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="feedback-btn"
+                    aria-label="No, inaccurate"
+                    onClick={() => handleFeedback('down')}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
