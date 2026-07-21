@@ -256,7 +256,7 @@ function VisaForm({ formData, onChange, onSubmit, loading }) {
             isMulti
             isClearable
             styles={selectStyles}
-            menuPortalTarget={document.body}
+            menuPortalTarget={typeof document === 'undefined' ? null : document.body}
           />
         </div>
       </div>

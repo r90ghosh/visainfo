@@ -118,7 +118,7 @@ function CountrySelect({ value, onChange, placeholder, styles }) {
       isSearchable
       isClearable
       styles={styles || defaultStyles}
-      menuPortalTarget={document.body}
+      menuPortalTarget={typeof document === 'undefined' ? null : document.body}
     />
   );
 }

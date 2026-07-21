@@ -1,15 +1,13 @@
+'use client';
+
 import { useState, useRef, useEffect, useCallback } from 'react';
-import AnimatedBackground from './components/AnimatedBackground';
-import Header from './components/Header';
 import VisaForm from './components/VisaForm';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import ResultsPanel from './components/ResultsPanel';
-import Footer from './components/Footer';
 import countries from './data/countries';
 import { travelReasonOptions, currentVisaOptions } from './data/formOptions';
 import { trackEvent } from './lib/analytics';
-import './App.css';
 
 const initialFormData = {
   residentCountry: null,
@@ -79,7 +77,7 @@ async function requestPhase(payload, phase) {
   });
 }
 
-function App() {
+function HomeClient() {
   const [formData, setFormData] = useState(initialFormData);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -206,41 +204,32 @@ function App() {
   }, []);
 
   return (
-    <>
-      <AnimatedBackground />
-      <div className="app">
-        <Header />
+    <div className="app-content">
+      <VisaForm
+        formData={formData}
+        onChange={handleFormChange}
+        onSubmit={handleSubmit}
+        loading={loading}
+      />
 
-        <div className="app-content">
-          <VisaForm
-            formData={formData}
-            onChange={handleFormChange}
-            onSubmit={handleSubmit}
-            loading={loading}
+      {loading && <LoadingSpinner stage={loadingStage} />}
+
+      {error && !loading && <ErrorMessage message={error} />}
+
+      {results && !loading && (
+        <div ref={resultsRef}>
+          <ResultsPanel
+            results={results}
+            detailsLoading={detailsLoading}
+            detailsError={detailsError}
+            onRetryDetails={handleRetryDetails}
+            query={feedbackQuery}
+            onFeedback={handleFeedback}
           />
-
-          {loading && <LoadingSpinner stage={loadingStage} />}
-
-          {error && !loading && <ErrorMessage message={error} />}
-
-          {results && !loading && (
-            <div ref={resultsRef}>
-              <ResultsPanel
-                results={results}
-                detailsLoading={detailsLoading}
-                detailsError={detailsError}
-                onRetryDetails={handleRetryDetails}
-                query={feedbackQuery}
-                onFeedback={handleFeedback}
-              />
-            </div>
-          )}
         </div>
-
-        <Footer />
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 
-export default App;
+export default HomeClient;

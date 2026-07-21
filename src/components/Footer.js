@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import './Footer.css';
 
 function Footer() {
@@ -19,9 +20,9 @@ function Footer() {
         <p className="footer-text">
           AI-powered visa guidance. Not legal advice. Always verify with official sources.
         </p>
-        <a href="/privacy.html" className="footer-link">
+        <Link href="/privacy" className="footer-link">
           Privacy
-        </a>
+        </Link>
       </div>
     </footer>
   );
