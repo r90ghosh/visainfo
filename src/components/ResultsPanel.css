@@ -173,23 +173,87 @@
   -webkit-backdrop-filter: blur(8px);
 }
 
-.badge-required {
-  background: rgba(239, 68, 68, 0.12);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  box-shadow: 0 0 16px rgba(239, 68, 68, 0.15);
+.badge-icon {
+  width: 14px;
+  height: 14px;
 }
 
-.badge-not-required {
+/* Requirement category badge variants */
+.badge-visa-free {
   background: rgba(16, 185, 129, 0.12);
   color: #6ee7b7;
   border: 1px solid rgba(16, 185, 129, 0.3);
   box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
 }
 
-.badge-icon {
-  width: 14px;
-  height: 14px;
+.badge-eta,
+.badge-e-visa {
+  background: rgba(217, 159, 10, 0.14);
+  color: #f0c869;
+  border: 1px solid rgba(217, 159, 10, 0.35);
+  box-shadow: 0 0 16px rgba(217, 159, 10, 0.15);
+}
+
+.badge-voa {
+  background: rgba(45, 169, 167, 0.14);
+  color: #6fd8d5;
+  border: 1px solid rgba(45, 169, 167, 0.35);
+  box-shadow: 0 0 16px rgba(45, 169, 167, 0.15);
+}
+
+.badge-visa-required {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.15);
+}
+
+.badge-long-stay {
+  background: rgba(217, 119, 6, 0.14);
+  color: #fbb15e;
+  border: 1px solid rgba(217, 119, 6, 0.35);
+  box-shadow: 0 0 16px rgba(217, 119, 6, 0.15);
+}
+
+.badge-no-admission {
+  background: rgba(127, 29, 29, 0.25);
+  color: #f87171;
+  border: 1px solid rgba(153, 27, 27, 0.5);
+  box-shadow: 0 0 16px rgba(127, 29, 29, 0.2);
+}
+
+.badge-unknown {
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 0 16px rgba(148, 163, 184, 0.1);
+}
+
+/* Requirement card supporting text */
+.result-card-subtext {
+  font-size: 0.9rem;
+  color: rgba(255, 248, 238, 0.65);
+  margin: 10px 0 0;
+  line-height: 1.5;
+}
+
+.result-card-note {
+  font-size: 0.8rem;
+  color: rgba(255, 248, 238, 0.4);
+  margin: 10px 0 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.waiver-note {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(212, 168, 83, 0.08);
+  border-left: 3px solid rgba(212, 168, 83, 0.5);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 248, 238, 0.85);
+  line-height: 1.5;
 }
 
 /* Link button */
@@ -219,6 +283,10 @@
 .result-link-icon {
   width: 14px;
   height: 14px;
+}
+
+.embassy-directory-link {
+  margin-top: 12px;
 }
 
 /* Cost highlight */

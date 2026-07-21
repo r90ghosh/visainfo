@@ -38,7 +38,7 @@ function App() {
         nationalityCountry: formData.nationalityCountry?.value,
         destinationCountry: formData.destinationCountry?.value,
         travelReason: formData.travelReason?.label,
-        currentVisas: (formData.currentVisas || []).map((v) => v.label),
+        currentVisas: (formData.currentVisas || []).map((v) => v.value).filter((v) => v !== 'na'),
         residentCountryName: formData.residentCountry?.label,
         nationalityCountryName: formData.nationalityCountry?.label,
         destinationCountryName: formData.destinationCountry?.label,

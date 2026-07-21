@@ -1,14 +1,34 @@
 import './ResultsPanel.css';
 
+const BADGE_CLASSES = {
+  visa_free: 'badge-visa-free',
+  eta: 'badge-eta',
+  e_visa: 'badge-e-visa',
+  visa_on_arrival: 'badge-voa',
+  visa_required: 'badge-visa-required',
+  long_stay: 'badge-long-stay',
+  no_admission: 'badge-no-admission',
+  unknown: 'badge-unknown',
+};
+
 function ResultsPanel({ results }) {
   const {
-    visaRequired,
+    requirementCategory,
+    requirementLabel,
+    requirementDescription,
+    maxStayDays,
+    waiver,
+    shortStayNote,
     visaType,
     embassyInfo,
+    embassyDirectoryUrl,
     applicationFormUrl,
     applicationCost,
-    currentWaitTime,
+    processingTime,
+    additionalNotes,
   } = results;
+
+  const badgeClass = BADGE_CLASSES[requirementCategory] || 'badge-unknown';
 
   return (
     <div className="results-panel">
@@ -21,43 +41,29 @@ function ResultsPanel({ results }) {
       </div>
 
       <div className="results-grid">
-        {/* Visa Required */}
-        <div className="result-card">
+        {/* Visa Requirement */}
+        <div className="result-card result-card--full">
           <h3 className="result-card-title">
             <svg className="result-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
-            Visa Required?
+            Visa Requirement
           </h3>
-          <span
-            className={`badge ${visaRequired === 'Yes' ? 'badge-required' : 'badge-not-required'}`}
-          >
-            {visaRequired === 'Yes' ? (
-              <svg className="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            ) : (
-              <svg className="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            )}
-            {visaRequired}
-          </span>
-        </div>
-
-        {/* Visa Type */}
-        <div className="result-card">
-          <h3 className="result-card-title">
-            <svg className="result-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-            Visa Type
-          </h3>
-          <p className="result-card-text">{visaType || 'N/A'}</p>
+          <span className={`badge ${badgeClass}`}>{requirementLabel}</span>
+          {requirementDescription && (
+            <p className="result-card-subtext">{requirementDescription}</p>
+          )}
+          {maxStayDays != null && (
+            <p className="result-card-subtext">Stay up to {maxStayDays} days</p>
+          )}
+          {waiver && (
+            <div className="waiver-note">
+              Because you hold a {waiver.heldVisa} visa: {waiver.conditions}
+            </div>
+          )}
+          {shortStayNote && <p className="result-card-note">{shortStayNote}</p>}
         </div>
 
         {/* Embassy Information */}
@@ -72,13 +78,40 @@ function ResultsPanel({ results }) {
           {embassyInfo ? (
             <>
               <p className="result-card-text embassy-name">{embassyInfo.name}</p>
-              <p className="result-card-text embassy-address">
-                {embassyInfo.address}
-              </p>
+              {embassyInfo.address && (
+                <p className="result-card-text embassy-address">{embassyInfo.address}</p>
+              )}
             </>
           ) : (
             <p className="result-card-text">Not available</p>
           )}
+          {embassyDirectoryUrl && (
+            <a
+              href={embassyDirectoryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="result-link embassy-directory-link"
+            >
+              <svg className="result-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Find on EmbassyPages
+            </a>
+          )}
+        </div>
+
+        {/* Visa Type */}
+        <div className="result-card">
+          <h3 className="result-card-title">
+            <svg className="result-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            Visa Type
+          </h3>
+          <p className="result-card-text">{visaType || 'N/A'}</p>
         </div>
 
         {/* Application Form */}
@@ -121,35 +154,31 @@ function ResultsPanel({ results }) {
           <p className="result-cost">{applicationCost || 'Not available'}</p>
         </div>
 
-        {/* Wait Time */}
+        {/* Typical Processing Time */}
         <div className="result-card">
           <h3 className="result-card-title">
             <svg className="result-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
-            Estimated Wait Time
+            Typical Processing Time
           </h3>
-          <p className="result-wait">
-            {currentWaitTime || 'Not available'}
-          </p>
+          <p className="result-wait">{processingTime || 'Not available'}</p>
         </div>
 
-        {/* Processing Time */}
-        <div className="result-card">
-          <h3 className="result-card-title">
-            <svg className="result-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-            Processing Time
-          </h3>
-          <p className="result-card-text">
-            {results.processingTime || 'Varies by application'}
-          </p>
-        </div>
+        {additionalNotes && (
+          <div className="result-card result-card--full">
+            <h3 className="result-card-title">
+              <svg className="result-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              Additional Notes
+            </h3>
+            <p className="result-card-text">{additionalNotes}</p>
+          </div>
+        )}
       </div>
 
       <div className="results-footer">

@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "description": "Visa relaxations for travelers holding a valid visa from the US, Schengen area, or UK. Tourist travel only. Conditions must be met - always verify with official sources.",
+    "heldVisaValues": ["united_states", "schengen", "united_kingdom"],
+    "updatedAt": "2026-07-21"
+  },
+  "rules": [
+    { "destination": "MX", "heldVisas": ["united_states"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 180, "conditions": "US visa must be valid (any category)." },
+    { "destination": "PA", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 30, "conditions": "Visa must be valid for at least 6 months and have been used at least once to enter the issuing country/area." },
+    { "destination": "CR", "heldVisas": ["united_states", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 30, "conditions": "Visa must be a valid multiple-entry tourist/business visa; stay is limited to the visa's remaining validity." },
+    { "destination": "DO", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 30, "conditions": "Visa must be valid." },
+    { "destination": "GT", "heldVisas": ["united_states", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "Visa must be valid (multiple-entry)." },
+    { "destination": "SV", "heldVisas": ["united_states"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "US visa must be valid." },
+    { "destination": "HN", "heldVisas": ["united_states", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "Visa must be valid." },
+    { "destination": "BZ", "heldVisas": ["united_states"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 30, "conditions": "US visa must be valid and previously used; an entry fee may still apply." },
+    { "destination": "TR", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "e_visa", "maxStayDays": 30, "conditions": "Conditional e-Visa: only for nationalities on Turkey's conditional e-Visa list; supporting visa must be valid." },
+    { "destination": "AE", "heldVisas": ["united_states"], "nationalities": ["IN"], "requirement": "visa_on_arrival", "maxStayDays": 14, "conditions": "Indian citizens with a valid US visit visa or US green card." },
+    { "destination": "QA", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": ["IN"], "requirement": "visa_on_arrival", "maxStayDays": 30, "conditions": "Valid visa or residence permit; onward/return ticket and hotel booking required." },
+    { "destination": "SA", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "e_visa", "maxStayDays": 90, "conditions": "US/UK/Schengen tourist or business visa must be valid and have been used at least once." },
+    { "destination": "OM", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "e_visa", "maxStayDays": 30, "conditions": "Supporting visa or residence permit must be valid." },
+    { "destination": "BH", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "e_visa", "maxStayDays": 14, "conditions": "Eligibility varies by nationality; supporting visa must be valid." },
+    { "destination": "GE", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "Visa or residence permit must be valid." },
+    { "destination": "AL", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "Multiple-entry visa that has been previously used." },
+    { "destination": "RS", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "Visa must be valid." },
+    { "destination": "ME", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 30, "conditions": "Visa must be valid." },
+    { "destination": "MK", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 15, "conditions": "Multiple-entry visa valid at least 5 days beyond the intended stay." },
+    { "destination": "BA", "heldVisas": ["schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 30, "conditions": "Multiple-entry Schengen visa that has been previously used." },
+    { "destination": "MD", "heldVisas": ["schengen"], "nationalities": "all", "requirement": "visa_free", "maxStayDays": 90, "conditions": "Valid Schengen visa or residence permit." },
+    { "destination": "TW", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": ["IN", "VN", "ID", "PH", "TH", "KH", "MM", "LA"], "requirement": "eta", "maxStayDays": 14, "conditions": "Travel Authorization Certificate (free, online); supporting visa must be valid or have expired less than 10 years ago." },
+    { "destination": "PH", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": ["IN"], "requirement": "visa_free", "maxStayDays": 14, "conditions": "Valid visa from the US, UK, or a Schengen state (Japan, Australia, Canada, Singapore visas also qualify)." },
+    { "destination": "PE", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": ["IN", "CN"], "requirement": "visa_free", "maxStayDays": 180, "conditions": "Visa must be valid for at least 6 months." },
+    { "destination": "CO", "heldVisas": ["united_states", "schengen"], "nationalities": ["IN", "CN", "TH", "VN"], "requirement": "visa_free", "maxStayDays": 90, "conditions": "US visa (not transit) or Schengen visa/residence permit valid at least 180 days." },
+    { "destination": "IE", "heldVisas": ["united_kingdom"], "nationalities": ["IN", "CN"], "requirement": "visa_free", "maxStayDays": 90, "conditions": "British-Irish Visa Scheme: eligible UK short-stay visa endorsed BIVS; you must first enter the UK on that visa." },
+    { "destination": "EG", "heldVisas": ["united_states", "united_kingdom", "schengen"], "nationalities": ["IN"], "requirement": "visa_on_arrival", "maxStayDays": 30, "conditions": "Valid, previously used visa; arrival at an international airport." }
+  ]
+}
